@@ -72,7 +72,7 @@ module.exports = function (req, res, next) {
                     return res.status(response.statusCode).json(error);
                 }
             } else {
-                return url;
+                return res.status(200).json(url);
             }
         });
     } catch (error) {
