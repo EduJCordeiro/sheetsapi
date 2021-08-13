@@ -72,7 +72,7 @@ module.exports = function (req, res, next) {
                     return res.status(response.statusCode).json(error);
                 }
             } else {
-                return res.status(200).json('No entries returned. Do you have the right ID?');
+                return url;
             }
         });
     } catch (error) {
