@@ -8,7 +8,6 @@
     "body-parser": "^1.x.x",
     "cheerio": "^1.0.0-rc.10",
     "express": "^4.x.x",
-    "node-json2html": "^2.1.0",
     "puppeteer": "^10.2.0",
     "request": "^2.88.2",
     "request-promise": "^4.2.6"

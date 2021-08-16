@@ -1,9 +1,6 @@
 const request = require("request-promise");
 const cheerio = require("cheerio");
 
-const json2html = require('node-json2html');
- 
-
 var api = require('./api');
 
 var express = require('express');
