@@ -11,8 +11,6 @@ module.exports = function (req, res, next) {
             showColumns = params.columns || true,
             url = 'https://spreadsheets.google.com/feeds/list/1eXuH6zQzJvWOs5G5ZMk9cZMWI1iqL32VTvcTTuWpLpA/1/public/values?alt=json';
 
-            console.log(url);
-
         request(url, function (error, response, body) {
             if (!error && response.statusCode === 200) {
                 var data = JSON.parse(response.body);
@@ -72,7 +70,7 @@ module.exports = function (req, res, next) {
                     return res.status(response.statusCode).json(error);
                 }
             } else {
-                return res.status(200).json(url);
+                return res.status(200).json('Error');
             }
         });
     } catch (error) {
