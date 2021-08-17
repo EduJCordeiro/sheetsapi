@@ -1,6 +1,9 @@
 const request = require("request-promise");
 const cheerio = require("cheerio");
 
+const json2html = require('node-json2html');
+ 
+
 var api = require('./api');
 
 var express = require('express');
@@ -33,20 +36,14 @@ app.get('/fiis', function (req, res) {
     const scrapedData = [];
     const tableHeaders = [];
 
-    const teste = $("#table-ranking tr");
-    teste.each((index, element_main) => {
+    const data = $("#table-ranking tr");
+    data.each((index, element_main) => {
       if (index === 0) {
         const ths = $(element_main).find("th");
         $(ths).each((i, element) => {
           let names = $(element).text();
           tableHeaders.push(
-            names.replace(/[&\\óô]/g, 'o')
-            .replace(/[&\\ç]/g, 'c')
-            .replace(/[&\\áãâ]/g, 'a')
-            .replace(/[&\\é]/g, 'e')
-            .replace(/[&\/\\().]/g, '')
-            .replace(/[&\\í]/g, 'i')
-            .replace(' ','')
+            names
           );
         });
       }else{
@@ -59,20 +56,62 @@ app.get('/fiis', function (req, res) {
         console.log(tableRow)
       }
     });
+
     const row = html => `<tr>\n${html}</tr>\n`,
       heading = object => row(Object.keys(object).reduce((html, heading) => (html + `<th>${heading}</th>`), '')),
       datarow = object => row(Object.values(object).reduce((html, value) => (html + `<td>${value}</td>`), ''));
                                
     function htmlTable(dataList) {
       return `<table>
-                ${heading(dataList[0])}
-                ${dataList.reduce((html, object) => (html + datarow(object)), '')}
-              </table>`
+        ${heading(dataList[0])}
+        ${dataList.reduce((html, object) => (html + datarow(object)), '')}
+      </table>`
     }
         
     let html = htmlTable(scrapedData);
 
     res.send(html);
+   }
+
+   main();
+});
+
+
+app.get('/data', function (req, res) {
+  const url = 'https://docs.google.com/spreadsheets/d/17KWqNApbA1YAzvhScOKRH2ITH3_NCHheb_8dgdm6VQ0/gviz/tq?tqx=out:html&sheet=1';
+
+  async function main() {
+    const result = await request.get(url);
+    const $ = cheerio.load(result);
+
+    var json = [];
+    var data = `{"data": [`;
+
+    const tr = $("tr");
+    tr.each((index, element_main) => {
+      if(index == 0){
+        const ths = $(element_main).find("td");
+        $(ths).each((i, element) => {
+          let names = $(element).text();
+          json.push(
+            names.toLocaleLowerCase()
+          );
+        });
+      }else{
+        data += (index == 1) ? `{` : `, {`;
+        const ths = $(element_main).find("td");
+        $(ths).each((i, element) => {
+          let names1 = $(element).text();
+          
+          data += (i == 0) ? `"${json[i]}": "${names1}"` : `, "${json[i]}": "${names1}"`;
+        });
+        data += `}`;
+      }
+    });
+
+    data += `]}`
+
+    res.send(data);
    }
 
    main();
@@ -85,5 +124,5 @@ app.use(function(err, req, res, next) {
 });
 
 app.listen(port, function() {
-  console.log('GSX2JSON listening on port ' + port);
+  // console.log('GSX2JSON listening on port ' + port);
 });
