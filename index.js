@@ -36,8 +36,8 @@ app.get('/fiis', function (req, res) {
     const scrapedData = [];
     const tableHeaders = [];
 
-    const data = $("#table-ranking tr");
-    data.each((index, element_main) => {
+    const table = $("#table-ranking tr");
+    table.each((index, element_main) => {
       if (index === 0) {
         const ths = $(element_main).find("th");
         $(ths).each((i, element) => {
@@ -84,8 +84,8 @@ app.get('/data', function (req, res) {
     const result = await request.get(url);
     const $ = cheerio.load(result);
 
-    var json = [];
-    var data = `{"data": [`;
+    let json = [];
+    let data = `{"data": [`;
 
     const tr = $("tr");
     tr.each((index, element_main) => {
