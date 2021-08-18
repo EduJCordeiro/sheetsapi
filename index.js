@@ -78,7 +78,7 @@ app.get('/fiis', function (req, res) {
 
 
 app.get('/data', function (req, res) {
-  const url = 'https://docs.google.com/spreadsheets/d/17KWqNApbA1YAzvhScOKRH2ITH3_NCHheb_8dgdm6VQ0/gviz/tq?tqx=out:html&sheet=1';
+  const url = 'https://docs.google.com/spreadsheets/d/1eXuH6zQzJvWOs5G5ZMk9cZMWI1iqL32VTvcTTuWpLpA/gviz/tq?tqx=out:html&sheet=1';
 
   async function main() {
     const result = await request.get(url);
